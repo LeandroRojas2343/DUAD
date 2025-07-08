@@ -1,38 +1,38 @@
-### data.py ###
 import csv
 import os
 
-def exportar_csv(lista, archivo):
+def export_csv(student_list, filename):
     try:
-        with open(archivo, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=["nombre", "seccion", "español", "ingles", "sociales", "ciencias"])
+        with open(filename, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=["name", "section", "spanish", "english", "social_studies", "science"])
             writer.writeheader()
-            for est in lista:
-                writer.writerow(est)
-        print("\nDatos exportados exitosamente.")
+            for student in student_list:
+                writer.writerow(student)
+        print("\nData exported successfully.")
     except Exception as e:
-        print(f"Error al exportar: {e}")
+        print(f"Error while exporting: {e}")
 
-def importar_csv(archivo):
-    if not os.path.exists(archivo):
-        print("\nArchivo no encontrado. Debe exportar primero.")
+def import_csv(filename):
+    if not os.path.exists(filename):
+        print("\nFile not found. You must export first.")
         return []
 
-    lista = []
+    student_list = []
     try:
-        with open(archivo, mode='r', newline='', encoding='utf-8') as file:
+        with open(filename, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                estudiante = {
-                    "nombre": row["nombre"],
-                    "seccion": row["seccion"],
-                    "español": float(row["español"]),
-                    "ingles": float(row["ingles"]),
-                    "sociales": float(row["sociales"]),
-                    "ciencias": float(row["ciencias"])
+                student = {
+                    "name": row["name"],
+                    "section": row["section"],
+                    "spanish": float(row["spanish"]),
+                    "english": float(row["english"]),
+                    "social_studies": float(row["social_studies"]),
+                    "science": float(row["science"])
                 }
-                lista.append(estudiante)
-        print("\nDatos importados exitosamente.")
+                student_list.append(student)
+        print("\nData imported successfully.")
     except Exception as e:
-        print(f"Error al importar: {e}")
-    return lista
+        print(f"Error while importing: {e}")
+    return student_list
+

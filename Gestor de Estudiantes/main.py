@@ -1,31 +1,31 @@
-### main.py ###
-from menu import mostrar_menu_y_obtener_opcion
+from menu import show_menu_and_get_option
 from actions import (
-    registrar_estudiantes,
-    mostrar_estudiantes,
-    top_3_estudiantes,
-    promedio_general
+    register_students,
+    show_students,
+    top_3_students,
+    overall_average
 )
-from data import exportar_csv, importar_csv
+from data import export_csv, import_csv
 
-estudiantes = []
+students = []
 
 while True:
-    opcion = mostrar_menu_y_obtener_opcion()
+    option = show_menu_and_get_option()
 
-    if opcion == 1:
-        registrar_estudiantes(estudiantes)
-    elif opcion == 2:
-        mostrar_estudiantes(estudiantes)
-    elif opcion == 3:
-        top_3_estudiantes(estudiantes)
-    elif opcion == 4:
-        promedio_general(estudiantes)
-    elif opcion == 5:
-        exportar_csv(estudiantes, 'estudiantes.csv')
-    elif opcion == 6:
-        estudiantes = importar_csv('estudiantes.csv')
-    elif opcion == 7:
-        print("Saliendo del programa...")
+    if option == 1:
+        register_students(students)
+    elif option == 2:
+        show_students(students)
+    elif option == 3:
+        top_3_students(students)
+    elif option == 4:
+        overall_average(students)
+    elif option == 5:
+        export_csv(students, 'students.csv')
+    elif option == 6:
+        students = import_csv('students.csv')
+    elif option == 7:
+        print("Exiting the program...")
         break
+
 

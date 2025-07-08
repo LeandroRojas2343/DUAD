@@ -1,81 +1,77 @@
-### actions.py ###
-def pedir_nota(materia):
+def ask_grade(subject):
     while True:
         try:
-            nota = float(input(f"Nota de {materia}: "))
-            if 0 <= nota <= 100:
-                return nota
+            grade = float(input(f"Grade for {subject}: "))
+            if 0 <= grade <= 100:
+                return grade
             else:
-                print("La nota debe estar entre 0 y 100.")
+                print("The grade must be between 0 and 100.")
         except ValueError:
-            print("Debe ingresar un número válido.")
+            print("You must enter a valid number.")
 
-def registrar_estudiantes(lista):
+def register_students(student_list):
     try:
-        n = int(input("¿Cuántos estudiantes desea registrar?: "))
+        n = int(input("How many students do you want to register?: "))
     except ValueError:
-        print("Debe ingresar un número entero.")
+        print("You must enter an integer.")
         return
 
     for _ in range(n):
-        print("\n--- Nuevo Estudiante ---")
-        nombre = input("Nombre completo: ")
-        seccion = input("Sección (ej: 11B): ")
-        esp = pedir_nota("Español")
-        ing = pedir_nota("Inglés")
-        soc = pedir_nota("Sociales")
-        cie = pedir_nota("Ciencias")
+        print("\n--- New Student ---")
+        name = input("Full name: ")
+        section = input("Section (e.g., 11B): ")
+        spanish = ask_grade("Spanish")
+        english = ask_grade("English")
+        social_studies = ask_grade("Social Studies")
+        science = ask_grade("Science")
 
-        estudiante = {
-            "nombre": nombre,
-            "seccion": seccion,
-            "español": esp,
-            "ingles": ing,
-            "sociales": soc,
-            "ciencias": cie
+        student = {
+            "name": name,
+            "section": section,
+            "spanish": spanish,
+            "english": english,
+            "social_studies": social_studies,
+            "science": science
         }
 
-        lista.append(estudiante)
+        student_list.append(student)
 
-
-def mostrar_estudiantes(lista):
-    if not lista:
-        print("\nNo hay estudiantes registrados.")
+def show_students(student_list):
+    if not student_list:
+        print("\nNo students registered.")
         return
-    for est in lista:
-        print("\nNombre:", est['nombre'])
-        print("Sección:", est['seccion'])
-        print("Español:", est['español'])
-        print("Inglés:", est['ingles'])
-        print("Sociales:", est['sociales'])
-        print("Ciencias:", est['ciencias'])
+    for st in student_list:
+        print("\nName:", st['name'])
+        print("Section:", st['section'])
+        print("Spanish:", st['spanish'])
+        print("English:", st['english'])
+        print("Social Studies:", st['social_studies'])
+        print("Science:", st['science'])
 
-
-def top_3_estudiantes(lista):
-    if len(lista) < 3:
-        print("\nDebe haber al menos 3 estudiantes para ver el top 3.")
+def top_3_students(student_list):
+    if len(student_list) < 3:
+        print("\nAt least 3 students are required to view the top 3.")
         return
 
-    promedios = []
-    for est in lista:
-        promedio = (est['español'] + est['ingles'] + est['sociales'] + est['ciencias']) / 4
-        promedios.append((promedio, est))
+    averages = []
+    for st in student_list:
+        avg = (st['spanish'] + st['english'] + st['social_studies'] + st['science']) / 4
+        averages.append((avg, st))
 
-    top3 = sorted(promedios, key=lambda x: x[0], reverse=True)[:3]
+    top3 = sorted(averages, key=lambda x: x[0], reverse=True)[:3]
 
-    print("\n--- Top 3 Estudiantes ---")
-    for i, (prom, est) in enumerate(top3, 1):
-        print(f"#{i} - {est['nombre']} ({est['seccion']}), Promedio: {prom:.2f}")
+    print("\n--- Top 3 Students ---")
+    for i, (avg, st) in enumerate(top3, 1):
+        print(f"#{i} - {st['name']} ({st['section']}), Average: {avg:.2f}")
 
-
-def promedio_general(lista):
-    if not lista:
-        print("\nNo hay estudiantes registrados.")
+def overall_average(student_list):
+    if not student_list:
+        print("\nNo students registered.")
         return
 
-    suma = 0
-    for est in lista:
-        suma += (est['español'] + est['ingles'] + est['sociales'] + est['ciencias']) / 4
+    total = 0
+    for st in student_list:
+        total += (st['spanish'] + st['english'] + st['social_studies'] + st['science']) / 4
 
-    promedio = suma / len(lista)
-    print(f"\nPromedio general de los estudiantes: {promedio:.2f}")
+    average = total / len(student_list)
+    print(f"\nOverall average of all students: {average:.2f}")
