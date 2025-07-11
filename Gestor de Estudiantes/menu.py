@@ -1,16 +1,16 @@
-### menu.py ###
-def mostrar_menu_y_obtener_opcion():
-    print("\n--- MENÚ ---")
-    print("1. Ingresar información de estudiantes")
-    print("2. Ver información de todos los estudiantes")
-    print("3. Ver top 3 de estudiantes por nota promedio")
-    print("4. Ver promedio general de notas")
-    print("5. Exportar datos a CSV")
-    print("6. Importar datos desde CSV")
-    print("7. Salir")
+def show_menu_and_get_option():
+    print("\n--- MENU ---")
+    print("1. Enter student information")
+    print("2. View all student information")
+    print("3. View top 3 students by average grade")
+    print("4. View overall average grade")
+    print("5. Export data to CSV")
+    print("6. Import data from CSV")
+    print("7. Exit")
 
     while True:
-        opcion = input("Seleccione una opción válida (1-7): ")
-        if opcion in ["1", "2", "3", "4", "5", "6", "7"]:
-            return int(opcion)
-        print("Opción inválida. Intente de nuevo.")
+        option = input("Select a valid option (1-7): ")
+        if option in ["1", "2", "3", "4", "5", "6", "7"]:
+            return int(option)
+        print("Invalid option. Please try again.")
+
