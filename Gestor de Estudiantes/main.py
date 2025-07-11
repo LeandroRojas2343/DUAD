@@ -2,12 +2,14 @@ from menu import show_menu_and_get_option
 from actions import (
     register_students,
     show_students,
-    top_3_students,
+    top_3_student.
     overall_average
 )
 from data import export_csv, import_csv
 
-students = []
+# Funcion principal 
+
+def main(students): 
 
 while True:
     option = show_menu_and_get_option()
@@ -27,5 +29,10 @@ while True:
     elif option == 7:
         print("Exiting the program...")
         break
+    
+return students
 
-
+#Entrada del programa 
+if_name_=="_main_": 
+    students = []
+    students = main(Students)
