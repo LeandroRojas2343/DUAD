@@ -11,7 +11,7 @@ def ask_grade(subject):
 
 def register_students(student_list):
     try:
-        n = int(input("How many students do you want to register?: "))
+        How_many_students = int(input("How many students do you want to register?: "))
     except ValueError:
         print("You must enter an integer.")
         return
