@@ -11,12 +11,12 @@ def ask_grade(subject):
 
 def register_students(student_list):
     try:
-        How_many_students = int(input("How many students do you want to register?: "))
+        how_many_students = int(input("How many students do you want to register?: "))
     except ValueError:
         print("You must enter an integer.")
         return
 
-    for _ in range(n):
+    for _ in range(how_many_students):
         print("\n--- New Student ---")
         name = input("Full name: ")
         section = input("Section (e.g., 11B): ")

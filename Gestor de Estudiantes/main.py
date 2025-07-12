@@ -2,37 +2,34 @@ from menu import show_menu_and_get_option
 from actions import (
     register_students,
     show_students,
-    top_3_student.
+    top_3_students,  
     overall_average
 )
 from data import export_csv, import_csv
 
-# Funcion principal 
-
+# Función principal
 def main(students): 
+    while True:
+        option = show_menu_and_get_option()
 
-while True:
-    option = show_menu_and_get_option()
+        if option == 1:
+            register_students(students)
+        elif option == 2:
+            show_students(students)
+        elif option == 3:
+            top_3_students(students)
+        elif option == 4:
+            overall_average(students)
+        elif option == 5:
+            export_csv(students, 'students.csv')
+        elif option == 6:
+            students = import_csv('students.csv')
+        elif option == 7:
+            print("Exiting the program...")
+            break  
+    return students
 
-    if option == 1:
-        register_students(students)
-    elif option == 2:
-        show_students(students)
-    elif option == 3:
-        top_3_students(students)
-    elif option == 4:
-        overall_average(students)
-    elif option == 5:
-        export_csv(students, 'students.csv')
-    elif option == 6:
-        students = import_csv('students.csv')
-    elif option == 7:
-        print("Exiting the program...")
-        break
-    
-return students
-
-#Entrada del programa 
-if_name_=="_main_": 
+# Entrada del programa
+if __name__ == "__main__":  
     students = []
-    students = main(Students)
+    students = main(students)
