@@ -7,4 +7,5 @@ def generate_list_trios(list_a, list_b, list_c):
 				
 	return result_list 
 #Complejidad: O(n x m x k)
-#Crecimiento:(cubico)
+#Crecimiento: Cubico 
+#Explicacion: Tres bucles anidados (recorre todas las combinaciones posibles)

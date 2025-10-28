@@ -3,9 +3,9 @@ def bubble_sort(lista):
     # Recorremos la lista varias veces
     for pasada in range(longitud_lista):
         # Comparamos cada par de elementos adyacentes
-        for posicion in range(1, longitud_lista - pasada):
+        for posicion in range(longitud_lista - 1, pasada, -1):
             # Si el elemento actual es mayor que el anterior, se intercambian
-            if lista[posicion] > lista[posicion - 1]:
+            if lista[posicion] < lista[posicion - 1]:
                 lista[posicion], lista[posicion - 1] = lista[posicion - 1], lista[posicion]
 
 # Pedimos lista de números al usuario
@@ -18,4 +18,4 @@ entrada = [int(x) for x in entrada.split(",")]
 bubble_sort(entrada)
 
 # Mostramos la lista ordenada
-print("Lista ordenada en sentido contrario (mayor a menor):", entrada)
+print("Lista ordenada (mayor a menor):", entrada)
