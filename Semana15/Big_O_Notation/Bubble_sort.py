@@ -1,11 +1,11 @@
-def bubble_sort(lista):
-    n = len(lista)
+def bubble_sort(list):
+    n = len(list)
     for i in range(n):
         for j in range(0, n - i - 1):
-            if lista[j] > lista[j + 1]:
-                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+            if list[j] > list[j + 1]:
+                list[j], list[j + 1] = list[j + 1], list[j]
 
 
-# Complejidad: O(n²)
-# Crecimiento: Cuadrático
-# Explicación: Doble bucle anidado. Ineficiente en listas grandes, usado con fines educativos.
+# Complexity: O(n²)
+# Growth: Quadratic
+# Explanation: Nested double loop. Inefficient for large lists, used for educational purposes.

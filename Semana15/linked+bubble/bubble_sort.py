@@ -1,38 +1,36 @@
 # bubble_sort_linked.py
 
-from Linked_list import ListaEnlazada  # importamos la clase desde el otro archivo
+from Linked_list import LinkedList  # import the class from the other file
 
-def bubble_sort_linked(lista):
-    """Ordena una lista enlazada con bubble sort"""
-    if not lista.head:
+def bubble_sort_linked(list):
+    """Sorts a linked list using bubble sort"""
+    if not list.head:
         return
 
-    cambiado = True
-    while cambiado:
-        cambiado = False
-        actual = lista.head
-        while actual.next:
-            if actual.valor > actual.next.valor:
-                # Intercambiamos los valores
-                actual.valor, actual.next.valor = actual.next.valor, actual.valor
-                cambiado = True
-            actual = actual.next
+    changed = True
+    while changed:
+        changed = False
+        current = list.head
+        while current.next:
+            if current.value > current.next.value:
+                # Swap the values
+                current.value, current.next.value = current.next.value, current.value
+                changed = True
+            current = current.next
 
-# --- Prueba del módulo ---
+# --- Module test ---
 if __name__ == "__main__":
-    lista = ListaEnlazada()
-    lista.agregar(5)
-    lista.agregar(3)
-    lista.agregar(8)
-    lista.agregar(1)
-    lista.agregar(4)
+    list = LinkedList()
+    list.add(5)
+    list.add(3)
+    list.add(8)
+    list.add(1)
+    list.add(4)
 
-    print("Antes de ordenar:")
-    lista.imprimir()
+    print("Before sorting:")
+    list.print()
 
-    bubble_sort_linked(lista)
+    bubble_sort_linked(list)
 
-    print("Después de ordenar:")
-    lista.imprimir()
-
-    
+    print("After sorting:")
+    list.print()

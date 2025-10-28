@@ -1,8 +1,8 @@
 def print_numbers_times_2(numbers_list):
     for number in numbers_list:
-        print(number * 2)  #Un solo bucle → O(n)
-        #crecimiento lineal
+        print(number * 2)  #Single loop → O(n)
+        #Linear growth
 
-#Complejidad: O(n)
-#Crecimiento: Lineal 
-#Explicacion: Un solo bucle que corre la lista una vez. 
+# Complexity: O(n)
+# Growth: Linear
+# Explanation: Single loop that runs through the list once

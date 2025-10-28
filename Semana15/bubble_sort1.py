@@ -1,22 +1,22 @@
-def bubble_sort(lista): 
-    longitud_lista = len(lista)
+def bubble_sort(list): 
+    list_length = len(list)
 
-    # Recorremos toda la lista 
-    for pasada in range(longitud_lista): 
-        # En cada pasada el último elemento ya queda en su lugar 
-        for posicion in range(0, longitud_lista - pasada - 1): 
-            # Si el elemento actual es mayor que el siguiente, los intercambiamos
-            if lista[posicion] > lista[posicion + 1]: 
-                lista[posicion], lista[posicion + 1] = lista[posicion + 1], lista[posicion]
+    # Traverse through all elements in the list
+    for pass_num in range(list_length): 
+        # In each pass, the last element is already in place
+        for position in range(0, list_length - pass_num - 1): 
+            # If the current element is greater than the next, swap them
+            if list[position] > list[position + 1]: 
+                list[position], list[position + 1] = list[position + 1], list[position]
 
-# Pedir lista al usuario
-entrada = input("Ingrese su lista de números a ordenar separados por comas: ")
+# Ask user for list
+user_input = input("Enter your list of numbers to sort separated by commas: ")
 
-# Convertir la entrada a lista de enteros
-lista = [int(x) for x in entrada.split(",")]
+# Convert input to list of integers
+list = [int(x) for x in user_input.split(",")]
 
-# Ordenar la lista
-bubble_sort(lista)
+# Sort the list
+bubble_sort(list)
 
-# Mostrar resultado
-print("Lista ordenada:", lista)
+# Display result
+print("Sorted list:", list)

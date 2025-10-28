@@ -1,29 +1,28 @@
 # linked_list.py
 
-class Nodo: 
-    def __init__(self, valor):
-        self.valor = valor
+class Node:
+    def __init__(self, value):
+        self.value = value
         self.next = None
 
-
-class ListaEnlazada: 
+class LinkedList:
     def __init__(self):
         self.head = None
 
-    def agregar(self, valor): 
-        nuevo = Nodo(valor)
-        if not self.head: 
-            self.head = nuevo 
+    def add(self, value):
+        new_node = Node(value)
+        if not self.head:
+            self.head = new_node
         else:
-            actual = self.head 
-            while actual.next:
-                actual = actual.next 
-            actual.next = nuevo 
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
 
-    def imprimir(self): 
-        actual = self.head 
-        while actual: 
-            print(actual.valor, end=" -> ")
-            actual = actual.next 
+    def print(self):
+        current = self.head
+        while current:
+            print(current.value, end=" -> ")
+            current = current.next
         print("None")
         
