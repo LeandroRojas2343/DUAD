@@ -1,142 +1,61 @@
-import sqlite3
-import os
-
-# -------------------------------------------------------
-# FUNCIÓN PRINCIPAL DE CONEXIÓN
-# -------------------------------------------------------
-def obtener_conexion():
-    """
-    Esta función crea (o abre) un archivo de base de datos SQLite.
-    Si el archivo no existe, Python lo crea automáticamente.
-
-    - db_path: ruta donde se guardará la base de datos
-    - conn: la conexión abierta hacia ese archivo .db
-    """
-    db_path = "finanzas.db"
-    conexion = sqlite3.connect(db_path)
-    return conexion
+import json
+from logica import Categoria, MovimientoFinanciero
 
 
-# -------------------------------------------------------
-# CREAR TABLAS SI NO EXISTEN     
-# -------------------------------------------------------
-def inicializar_tablas():
-    """
-    Crea las tablas necesarias para el sistema:
-    - categorias: contiene las categorías de gastos
-    - movimientos: contiene ingresos o gastos con monto, fecha y categoría
-    """
-    conexion = obtener_conexion()
-    cursor = conexion.cursor()
-
-    # Crear tabla de categorías
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS categorias (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            color TEXT NOT NULL
-        )
-    """)
-
-    # Crear tabla de movimientos
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS movimientos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tipo TEXT NOT NULL,        -- 'ingreso' o 'gasto'
-            categoria_id INTEGER NOT NULL,   -- 'Transporte' o 'comida'
-            monto REAL NOT NULL,
-            fecha TEXT NOT NULL,
-            descripcion TEXT,                  
-                   
-        FOREIGN KEY(categoria_id) REFERENCES categorias(id)
-        );
-    """)
-
-    conexion.commit()
-    conexion.close()
+RUTA_ARCHIVO = "datos.json"
 
 
-# -------------------------------------------------------
-# AGREGAR UNA NUEVA CATEGORÍA
-# -------------------------------------------------------
-def agregar_categoria(nombre, color):
-    """
-    Agrega una categoría a la tabla "categorias".
-    - nombre: nombre de la categoría ("Comida")
-    - color: color de la categoría (#FF6B6B)
-    """
-    conn = obtener_conexion()
-    cursor = conn.cursor()
+def guardar_datos(gestor_finanzas):
+    datos = {
+        "categorias": [
+            {
+                "nombre": categoria.nombre,
+                "color": categoria.color,
+                "tipo": categoria.tipo
+            }
+            for categoria in gestor_finanzas.lista_categorias
+        ],
+        "movimientos": [
+            {
+                "fecha": movimiento.fecha,
+                "descripcion": movimiento.descripcion,
+                "monto": movimiento.monto,
+                "categoria": movimiento.categoria.nombre,
+                "tipo": movimiento.tipo
+            }
+            for movimiento in gestor_finanzas.registro_movimientos
+        ]
+    }
 
-    cursor.execute("""
-        INSERT INTO categorias (nombre, color) 
-        VALUES (?, ?)
-    """, (nombre, color))
-
-    conn.commit()
-    conn.close()
-
-
-# -------------------------------------------------------
-# OBTENER TODAS LAS CATEGORÍAS
-# -------------------------------------------------------
-def obtener_categorias():
-    """
-    Retorna una lista de todas las categorías guardadas.
-    Cada categoría viene como una tupla: (id, nombre, color)
-    """
-    conn = obtener_conexion()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, nombre, color FROM categorias")
-    categorias = cursor.fetchall()
-
-    conn.close()
-    return categorias
+    with open(RUTA_ARCHIVO, "w", encoding="utf-8") as archivo:
+        json.dump(datos, archivo, indent=4, ensure_ascii=False)
 
 
-# -------------------------------------------------------
-# REGISTRAR UN MOVIMIENTO (ingreso o gasto)
-# -------------------------------------------------------
-def agregar_movimiento(tipo, categoria_id, monto, fecha, descripcion):
-    """
-    Guarda un movimiento financiero.
-    - tipo: "ingreso" o "gasto"
-    - categoria_id: categoría seleccionada
-    - monto: número decimal
-    - fecha: texto 'YYYY-MM-DD'
-    - descripcion: texto opcional
-    """
-    conn = obtener_conexion()
-    cursor = conn.cursor()
+def cargar_datos(gestor_finanzas):
+    try:
+        with open(RUTA_ARCHIVO, "r", encoding="utf-8") as archivo:
+            datos = json.load(archivo)
 
-    cursor.execute("""
-        INSERT INTO movimientos (tipo, categoria_id, monto, fecha, descripcion)
-        VALUES (?, ?, ?, ?, ?)
-    """, (tipo, categoria_id, monto, fecha, descripcion))
+        gestor_finanzas.lista_categorias.clear()
+        gestor_finanzas.registro_movimientos.clear()
 
-    conn.commit()
-    conn.close()
+        for cat in datos["categorias"]:
+            gestor_finanzas.lista_categorias.append(
+                Categoria(cat["nombre"], cat["color"], cat["tipo"])
+            )
 
+        for mov in datos["movimientos"]:
+            categoria = gestor_finanzas.buscar_categoria(mov["categoria"])
+            gestor_finanzas.registro_movimientos.append(
+                MovimientoFinanciero(
+                    mov["fecha"],
+                    mov["descripcion"],
+                    mov["monto"],
+                    categoria,
+                    mov["tipo"]
+                )
+            )
 
-# -------------------------------------------------------
-# VER TODOS LOS MOVIMIENTOS REGISTRADOS
-# -------------------------------------------------------
-def obtener_movimientos():
-    """
-    Retorna todos los movimientos financieros registrados.
-    """
-    conn = obtener_conexion()
-    cursor = conn.cursor()
+    except FileNotFoundError:
+        pass
 
-    cursor.execute("""
-        SELECT movimientos.id, movimientos.tipo, categorias.nombre, 
-               movimientos.monto, movimientos.fecha, movimientos.descripcion
-        FROM movimientos
-        JOIN categorias ON movimientos.categoria_id = categorias.id
-        ORDER BY movimientos.fecha DESC
-    """)
-
-    datos = cursor.fetchall()
-    conn.close()
-    return datos
