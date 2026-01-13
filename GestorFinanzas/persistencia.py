@@ -1,61 +1,59 @@
 import json
-from logica import Categoria, MovimientoFinanciero
+from logica import Category, FinancialMovement
+
+FILE_PATH = "data.json"
 
 
-RUTA_ARCHIVO = "datos.json"
-
-
-def guardar_datos(gestor_finanzas):
-    datos = {
-        "categorias": [
+def save_data(finance_manager):
+    data = {
+        "categories": [
             {
-                "nombre": categoria.nombre,
-                "color": categoria.color,
-                "tipo": categoria.tipo
+                "name": category.name,
+                "color": category.color,
+                "type": category.type
             }
-            for categoria in gestor_finanzas.lista_categorias
+            for category in finance_manager.category_list
         ],
-        "movimientos": [
+        "movements": [
             {
-                "fecha": movimiento.fecha,
-                "descripcion": movimiento.descripcion,
-                "monto": movimiento.monto,
-                "categoria": movimiento.categoria.nombre,
-                "tipo": movimiento.tipo
+                "date": movement.date,
+                "description": movement.description,
+                "amount": movement.amount,
+                "category": movement.category.name,
+                "type": movement.type
             }
-            for movimiento in gestor_finanzas.registro_movimientos
+            for movement in finance_manager.movement_records
         ]
     }
 
-    with open(RUTA_ARCHIVO, "w", encoding="utf-8") as archivo:
-        json.dump(datos, archivo, indent=4, ensure_ascii=False)
+    with open(FILE_PATH, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def cargar_datos(gestor_finanzas):
+def load_data(finance_manager):
     try:
-        with open(RUTA_ARCHIVO, "r", encoding="utf-8") as archivo:
-            datos = json.load(archivo)
+        with open(FILE_PATH, "r", encoding="utf-8") as file:
+            data = json.load(file)
 
-        gestor_finanzas.lista_categorias.clear()
-        gestor_finanzas.registro_movimientos.clear()
+        finance_manager.category_list.clear()
+        finance_manager.movement_records.clear()
 
-        for cat in datos["categorias"]:
-            gestor_finanzas.lista_categorias.append(
-                Categoria(cat["nombre"], cat["color"], cat["tipo"])
+        for cat in data["categories"]:
+            finance_manager.category_list.append(
+                Category(cat["name"], cat["color"], cat["type"])
             )
 
-        for mov in datos["movimientos"]:
-            categoria = gestor_finanzas.buscar_categoria(mov["categoria"])
-            gestor_finanzas.registro_movimientos.append(
-                MovimientoFinanciero(
-                    mov["fecha"],
-                    mov["descripcion"],
-                    mov["monto"],
-                    categoria,
-                    mov["tipo"]
+        for mov in data["movements"]:
+            category = finance_manager.find_category(mov["category"])
+            finance_manager.movement_records.append(
+                FinancialMovement(
+                    mov["date"],
+                    mov["description"],
+                    mov["amount"],
+                    category,
+                    mov["type"]
                 )
             )
 
     except FileNotFoundError:
         pass
-

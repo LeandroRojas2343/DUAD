@@ -1,100 +1,143 @@
 from datetime import datetime
 
 
-class Categoria:
-    def __init__(self, nombre_categoria, color_categoria, tipo_categoria):
-        self.nombre = nombre_categoria
-        self.color = color_categoria
-        self.tipo = tipo_categoria  # ingreso o gasto
+class Category:
+    def __init__(self, category_name, category_color, category_type):
+        self.name = category_name
+        self.color = category_color
+        self.type = category_type  # income or expense
 
     def __str__(self):
-        return f"{self.nombre} ({self.tipo})"
+        return f"{self.name} ({self.type})"
 
 
-class MovimientoFinanciero:
-    def __init__(self, fecha_movimiento, descripcion_movimiento,
-                 monto_movimiento, categoria_movimiento, tipo_movimiento):
+class FinancialMovement:
+    def __init__(self, movement_date, movement_description,
+                 movement_amount, movement_category, movement_type):
 
-        self.fecha = fecha_movimiento
-        self.descripcion = descripcion_movimiento
-        self.monto = monto_movimiento
-        self.categoria = categoria_movimiento
-        self.tipo = tipo_movimiento
+        self.date = movement_date
+        self.description = movement_description
+        self.amount = movement_amount
+        self.category = movement_category
+        self.type = movement_type
 
     def __str__(self):
-        return f"{self.fecha} | {self.descripcion} | ₡{self.monto}"
+        return f"{self.date} | {self.description} | ₡{self.amount}"
 
 
-class GestorFinanzas:
+class FinanceManager:
     def __init__(self):
-        self.lista_categorias = []
-        self.registro_movimientos = []
-        self._crear_categorias_predeterminadas()
+        self.category_list = []
+        self.movement_records = []
+        self._create_default_categories()
 
-    # ---------------- CATEGORÍAS ---------------- #
-
-    def _crear_categorias_predeterminadas(self):
-        categorias_base = [
-            ("Comida", "#FFA500", "gasto"),
-            ("Transporte", "#00CED1", "gasto"),
-            ("Salario", "#32CD32", "ingreso")
+    def _create_default_categories(self):
+        base_categories = [
+            ("Food", "#FFEE00", "expense"),
+            ("Transport", "#00CED1", "expense"),
+            ("Salary", "#32CD32", "income")
         ]
 
-        for nombre, color, tipo in categorias_base:
-            self.agregar_categoria(nombre, color, tipo)
+        for name, color, category_type in base_categories:
+            self.add_category(name, color, category_type)
 
-    def agregar_categoria(self, nombre_categoria, color_categoria, tipo_categoria):
-        if self._categoria_existe(nombre_categoria):
-            raise ValueError("La categoría ya existe")
+    def add_category(self, category_name, category_color, category_type):
+        category_name = self._validate_text(category_name, "Name")
+        category_color = self._validate_text(category_color, "Color")
+        category_type = self._validate_text(category_type, "Type")
 
-        nueva_categoria = Categoria(nombre_categoria, color_categoria, tipo_categoria)
-        self.lista_categorias.append(nueva_categoria)
-        return nueva_categoria
+        if self._category_exists(category_name):
+            raise ValueError("The category already exists")
 
-    def _categoria_existe(self, nombre_categoria):
+        new_category = Category(category_name, category_color, category_type)
+        self.category_list.append(new_category)
+        return new_category
+
+    def _category_exists(self, category_name):
+        category_name = self._validate_text(category_name, "Category")
         return any(
-            categoria.nombre.lower() == nombre_categoria.lower()
-            for categoria in self.lista_categorias
+            category.name.lower() == category_name.lower()
+            for category in self.category_list
         )
 
-    def buscar_categoria(self, nombre_categoria):
-        for categoria in self.lista_categorias:
-            if categoria.nombre.lower() == nombre_categoria.lower():
-                return categoria
+    def find_category(self, category_name):
+        if not category_name:
+            return None
+
+        category_name = category_name.strip().lower()
+        for category in self.category_list:
+            if category.name.lower() == category_name:
+                return category
         return None
 
-    # ---------------- MOVIMIENTOS ---------------- #
+    def register_movement(self, date, description, amount, category_name, movement_type):
 
-    def registrar_movimiento(self, fecha, descripcion, monto, nombre_categoria, tipo_movimiento):
-        monto_validado = self._validar_monto(monto)
-        fecha_validada = self._validar_fecha(fecha)
+        date = self._validate_date(date)
+        description = self._validate_text(description, "Description")
+        amount = self._validate_amount(amount)
+        category_name = self._validate_text(category_name, "Category")
+        movement_type = self._validate_text(movement_type, "Movement type")
 
-        categoria = self.buscar_categoria(nombre_categoria)
-        if not categoria:
-            raise ValueError("No existe la categoría")
+        category = self.find_category(category_name)
+        if not category:
+            raise ValueError("The selected category does not exist")
 
-        movimiento = MovimientoFinanciero(
-            fecha_validada,
-            descripcion,
-            monto_validado,
-            categoria,
-            tipo_movimiento
+        movement = FinancialMovement(
+            date,
+            description,
+            amount,
+            category,
+            movement_type
         )
 
-        self.registro_movimientos.append(movimiento)
-        return movimiento
+        self.movement_records.append(movement)
+        return movement
 
-    # ---------------- VALIDACIONES ---------------- #
+    def _validate_text(self, text, field_name):
+        if not text or str(text).strip() == "":
+            raise ValueError(f"The field '{field_name}' cannot be empty")
+        return str(text).strip()
 
-    def _validar_monto(self, monto):
-        monto_convertido = float(monto)
-        if monto_convertido <= 0:
-            raise ValueError("El monto debe ser mayor a cero")
-        return monto_convertido
-
-    def _validar_fecha(self, fecha_texto):
+    def _validate_amount(self, amount):
         try:
-            datetime.strptime(fecha_texto, "%d/%m/%Y")
-            return fecha_texto
-        except ValueError:
-            raise ValueError("Formato de fecha inválido (dd/mm/yyyy)")
+            amount = float(amount)
+        except (TypeError, ValueError):
+            raise ValueError("The amount must be a valid number")
+
+        if amount <= 0:
+            raise ValueError("The amount must be greater than zero")
+
+        return amount
+
+    def _validate_date(self, date_input):
+        """
+        - Text 'dd/mm/yyyy'
+        - Tuple (day, month, year) from FreeSimpleGUI calendar
+        return dd/mm/yyyy
+        """
+
+        if not date_input:
+            raise ValueError("The date cannot be empty")
+
+        # FreeSi Calendar
+        if isinstance(date_input, tuple):
+            try:
+                day, month, year = date_input
+                date_obj = datetime(year, month, day)
+                return date_obj.strftime("%d/%m/%Y")
+            except Exception:
+                raise ValueError("Invalid date selected from calendar")
+
+        # Text input case
+        if isinstance(date_input, str):
+            date_input = date_input.strip()
+            if date_input == "":
+                raise ValueError("The date cannot be empty")
+
+            try:
+                datetime.strptime(date_input, "%d/%m/%Y")
+                return date_input
+            except ValueError:
+                raise ValueError("Invalid date format (dd/mm/yyyy)")
+
+        raise ValueError("Invalid date value")

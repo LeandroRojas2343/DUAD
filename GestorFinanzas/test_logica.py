@@ -1,143 +1,143 @@
-import pytest 
-from logica import Categoria, MovimientoFinanciero, GestorFinanzas 
+import pytest
+from logica import Category, FinancialMovement, FinanceManager
 
 
-def test_crear_una_categoria(): 
-    #Arrange
-    nombre = "Comida"
-    color = "#FFA500"
-    tipo = "gasto"
-
-    #Act 
-    categoria = Categoria(nombre, color, tipo)
-
-    #Assert 
-    assert categoria.nombre == "Comida"
-    assert categoria.color == "#FFA500"
-    assert categoria.tipo == "gasto"
-
-
-def test_crear_gestor_con_categorias_predeterminadas(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act 
-    categorias = gestor.lista_categorias 
-
-    #Assert 
-    assert len(categorias) == 3 
-    assert categorias[0].nombre == "Comida"
-    assert categorias[1].nombre == "Transporte"
-    assert categorias[2].nombre == "Salario"
-
-
-def test_agregar_categoria_nueva(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act 
-    categoria = gestor.agregar_categoria("Salud", "#FF0000", "gasto")
-
-    #Assert 
-    assert categoria.nombre == "Salud"
-    assert categoria.color == "#FF0000"
-    assert categoria.tipo == "gasto"
-    assert len(gestor.lista_categorias) == 4 
-
-
-def test_agregar_categoria_duplicada_lanza_error(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act / Assert 
-    with pytest.raises(ValueError): 
-        gestor.agregar_categoria("Comida", "#FFFFFF", "gasto")
-
-
-def test_buscar_categoria_existente(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act 
-    categoria = gestor.buscar_categoria("Comida")
-
-    #Assert 
-    assert categoria is not None
-    assert categoria.nombre == "Comida"
-
-
-def test_buscar_categoria_inexistente(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act 
-    categoria = gestor.buscar_categoria("Viajes")
-
-    #Assert
-    assert categoria is None
-
-
-def test_registrar_movimiento_valido(): 
-    #Arrange 
-    gestor = GestorFinanzas()
-
-    #Act 
-    movimiento = gestor.registrar_movimiento(
-        "10/12/2025", 
-        "Almuerzo", 
-        3500,
-        "Comida", 
-        "gasto"
-    )
-
-    #Assert 
-    assert isinstance(movimiento, MovimientoFinanciero)
-    assert movimiento.descripcion == "Almuerzo"
-    assert movimiento.monto == 3500 
-    assert movimiento.tipo == "gasto"
-    assert len(gestor.registro_movimientos) == 1 
-
-
-def test_registrar_movimiento_con_monto_negativo():
+def test_create_category():
     # Arrange
-    gestor = GestorFinanzas()
+    name = "Food"
+    color = "#FFA500"
+    category_type = "expense"
+
+    # Act
+    category = Category(name, color, category_type)
+
+    # Assert
+    assert category.name == "Food"
+    assert category.color == "#FFA500"
+    assert category.type == "expense"
+
+
+def test_create_manager_with_default_categories():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act
+    categories = manager.category_list
+
+    # Assert
+    assert len(categories) == 3
+    assert categories[0].name == "Food"
+    assert categories[1].name == "Transport"
+    assert categories[2].name == "Salary"
+
+
+def test_add_new_category():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act
+    category = manager.add_category("Health", "#FF0000", "expense")
+
+    # Assert
+    assert category.name == "Health"
+    assert category.color == "#FF0000"
+    assert category.type == "expense"
+    assert len(manager.category_list) == 4
+
+
+def test_adding_duplicate_category_raises_error():
+    # Arrange
+    manager = FinanceManager()
 
     # Act / Assert
     with pytest.raises(ValueError):
-        gestor.registrar_movimiento(
+        manager.add_category("Food", "#FFFFFF", "expense")
+
+
+def test_find_existing_category():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act
+    category = manager.find_category("Food")
+
+    # Assert
+    assert category is not None
+    assert category.name == "Food"
+
+
+def test_find_non_existing_category():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act
+    category = manager.find_category("Travel")
+
+    # Assert
+    assert category is None
+
+
+def test_register_valid_movement():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act
+    movement = manager.register_movement(
+        "10/12/2025",
+        "Lunch",
+        3500,
+        "Food",
+        "expense"
+    )
+
+    # Assert
+    assert isinstance(movement, FinancialMovement)
+    assert movement.description == "Lunch"
+    assert movement.amount == 3500
+    assert movement.type == "expense"
+    assert len(manager.movement_records) == 1
+
+
+def test_register_movement_with_negative_amount():
+    # Arrange
+    manager = FinanceManager()
+
+    # Act / Assert
+    with pytest.raises(ValueError):
+        manager.register_movement(
             "10/12/2025",
             "Error",
             -100,
-            "Comida",
-            "gasto"
+            "Food",
+            "expense"
         )
 
 
-def test_registrar_movimiento_con_fecha_invalida():
+def test_register_movement_with_invalid_date():
     # Arrange
-    gestor = GestorFinanzas()
+    manager = FinanceManager()
 
     # Act / Assert
     with pytest.raises(ValueError):
-        gestor.registrar_movimiento(
+        manager.register_movement(
             "2025-12-10",
-            "Fecha mala",
+            "Bad date",
             1000,
-            "Comida",
-            "gasto"
+            "Food",
+            "expense"
         )
 
 
-def test_registrar_movimiento_con_categoria_inexistente():
+def test_register_movement_with_non_existing_category():
     # Arrange
-    gestor = GestorFinanzas()
+    manager = FinanceManager()
 
     # Act / Assert
     with pytest.raises(ValueError):
-        gestor.registrar_movimiento(
+        manager.register_movement(
             "10/12/2025",
-            "Algo",
+            "Something",
             1000,
-            "Viajes",
-            "gasto"
+            "Travel",
+            "expense"
         )

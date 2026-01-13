@@ -1,78 +1,71 @@
 import FreeSimpleGUI as sg
-from logica import GestorFinanzas
-from persistencia import guardar_datos, cargar_datos
+from logica import FinanceManager
+from persistencia import load_data, save_data
 from interfaces import (
-    ventana_principal,
-    ventana_categoria,
-    ventana_movimiento
+    main_window,
+    category_window,
+    transaction_window
 )
 
 
-def movimientos_a_tabla(gestor):
+def movements_to_table(manager):
     return [
         [
-            m.fecha,
-            m.descripcion,
-            m.monto,
-            m.categoria.nombre,
-            m.tipo
-        ] for m in gestor.registro_movimientos
+            m.date,
+            m.description,
+            m.amount,
+            m.category.name,
+            m.type
+        ]
+        for m in manager.movement_records
     ]
 
 
 def main():
-    gestor = GestorFinanzas()
-    cargar_datos(gestor)
+    manager = FinanceManager()
+    load_data(manager)
 
-    ventana = ventana_principal()
-    ventana["TABLA"].update(values=movimientos_a_tabla(gestor))
+    window = main_window()
+    window["TABLE"].update(values=movements_to_table(manager))
 
     while True:
-        evento, valores = ventana.read()
+        event, values = window.read()
 
-        if evento in (sg.WIN_CLOSED, "Salir"):
-            guardar_datos(gestor)
+        if event in (sg.WIN_CLOSED, "Exit"):
+            save_data(manager)
             break
 
-        if evento == "Agregar Categoría":
-            win = ventana_categoria()
-            ev, val = win.read()
-            win.close()
+        # -------- ADD CATEGORY --------
+        if event == "Add Category":
+            category_window(manager)
 
-            if ev == "Guardar":
-                tipo = "gasto" if val["GASTO"] else "ingreso"
-                gestor.agregar_categoria(val["NOMBRE"], val["COLOR"], tipo)
-                guardar_datos(gestor)
+        # -------- ADD INCOME / EXPENSE --------
+        elif event in ("Add Income", "Add Expense"):
+            transaction_type = "income" if event == "Add Income" else "expense"
 
-        if evento in ("Agregar Ingreso", "Agregar Gasto"):
-            tipo = "ingreso" if evento == "Agregar Ingreso" else "gasto"
-
-            categorias = [
-                c.nombre for c in gestor.lista_categorias if c.tipo == tipo
+            categories = [
+                c.name
+                for c in manager.category_list
+                if c.type == transaction_type
             ]
 
-            if not categorias:
-                sg.popup_error("No hay categorías disponibles")
+            if not categories:
+                sg.popup_error(
+                    f"There are no registered categories for {transaction_type}"
+                )
                 continue
 
-            win = ventana_movimiento(categorias, tipo)
-            ev, val = win.read()
-            win.close()
+            transaction_window(manager, categories, transaction_type)
 
-            if ev == "Guardar":
-                gestor.registrar_movimiento(
-                    val["FECHA"],
-                    val["DESCRIPCION"],
-                    val["MONTO"],
-                    val["CATEGORIA"],
-                    tipo
-                )
+            window["TABLE"].update(
+                values=movements_to_table(manager)
+            )
 
-                ventana["TABLA"].update(values=movimientos_a_tabla(gestor))
-                guardar_datos(gestor)
-
-    ventana.close()
+    window.close()
 
 
 if __name__ == "__main__":
     main()
+    
+ 
+

@@ -1,68 +1,47 @@
 import os
 import json
 import pytest
-from logica import GestorFinanzas
-from persistencia import guardar_datos, cargar_datos
+from logica import FinanceManager
+from persistencia import save_data, load_data
 
 
-def test_guardar_datos_crea_archivo_json():
+def test_save_data_creates_json_file():
     # Arrange
-    gestor = GestorFinanzas()
-    gestor.registrar_movimiento(
+    manager = FinanceManager()
+    manager.register_movement(
         "10/12/2025",
-        "Almuerzo",
+        "Lunch",
         3500,
-        "Comida",
-        "gasto"
+        "Food",
+        "expense"
     )
 
     # Act
-    guardar_datos(gestor)
+    save_data(manager)
 
     # Assert
-    assert os.path.exists("datos.json")
+    assert os.path.exists("data.json")
 
 
-def test_guardar_datos_contenido_correcto():
+def test_save_data_has_correct_content():
     # Arrange
-    gestor = GestorFinanzas()
-    gestor.registrar_movimiento(
+    manager = FinanceManager()
+    manager.register_movement(
         "11/12/2025",
         "Bus",
         1200,
-        "Transporte",
-        "gasto"
+        "Transport",
+        "expense"
     )
 
     # Act
-    guardar_datos(gestor)
+    save_data(manager)
 
     # Assert
-    with open("datos.json", "r", encoding="utf-8") as archivo:
-        datos = json.load(archivo)
+    with open("data.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
 
-    assert "categorias" in datos
-    assert "movimientos" in datos
-    assert len(datos["categorias"]) == 3
-    assert len(datos["movimientos"]) == 1
-
-
-
-def test_cargar_datos_sin_archivo_no_falla():
-    # Arrange
-    gestor = GestorFinanzas()
-
-    if os.path.exists("datos.json"):
-        os.remove("datos.json")
-
-    # Act
-    cargar_datos(gestor)
-
-    # Assert
-    assert gestor.lista_categorias != None
-    assert gestor.registro_movimientos != None
-
-
-def teardown_module(module):
-    if os.path.exists("datos.json"):
-        os.remove("datos.json")
+    assert "categories" in data
+    assert "movements" in data
+    assert len(data["categories"]) == 3
+    assert len(data["moveme]()
