@@ -131,7 +131,7 @@ def transaction_window(manager, categories, transaction_type):
 
                 # -------- LOGIC -------- #
 
-                manager.register_transaction(
+                manager.register_movement(
                     values["DATE"],
                     values["DESCRIPTION"],
                     values["AMOUNT"],
