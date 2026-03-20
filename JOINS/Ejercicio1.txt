@@ -1,0 +1,54 @@
+1. Even ∪ Odd
+
+Unión = todos los elementos que están en Even o en Odd.
+
+ Resultado:
+{1,2,3,4,5,6,7,8,9,10}
+
+
+2. Even ∩ Odd
+
+Intersección = elementos que están en ambos conjuntos.
+
+ No hay números que sean pares e impares al mismo tiempo.
+
+Resultado:
+∅
+
+
+3. All − Odd
+
+Diferencia = elementos que están en All pero NO en Odd.
+
+ Quitamos los impares de All.
+
+Resultado:
+{2,4,6,8,10}
+
+
+4. C(Even)
+
+Complemento = todo lo que está en All pero NO en Even.
+
+Quitamos los pares de All.
+
+Resultado:
+{1,3,5,7,9}
+
+
+5. C(Odd − All)
+
+Primero:
+ 
+Odd − All = elementos que están en Odd pero no en All.
+
+Como Odd está contenido dentro de All, entonces:
+
+Odd − All = ∅
+
+Ahora el complemento:
+
+C(∅) = All
+
+Resultado:
+{1,2,3,4,5,6,7,8,9,10}
