@@ -1,0 +1,65 @@
+Aplicación web para agendar citas médicas
+
+Al desarrollar una aplicación web para agendar citas médicas. 
+El sistema se divide en frontend y backend, cada uno con funciones específicas.
+
+
+Frontend
+
+El frontend es la parte del sistema con la que interactúa directamente el usuario desde el navegador.
+
+En esta aplicación, el frontend incluye:
+
+Formularios para registrar pacientes.
+
+Calendario para seleccionar fecha y hora de la cita.
+
+Pantallas para confirmar, modificar o cancelar citas.
+
+Mensajes visuales para el usuario.
+
+Tecnologías posibles para el frontend:
+
+HTML
+
+CSS
+
+JavaScript (o frameworks como React, Vue o Angular)
+
+
+Backend
+
+El backend es la parte del sistema que funciona en el servidor y no es visible para el usuario.
+
+En esta aplicación, el backend se encarga de:
+
+Almacenar las citas en la base de datos.
+
+Validar la disponibilidad de horarios.
+
+Gestionar usuarios y datos médicos.
+
+Procesar las solicitudes del frontend.
+
+Tecnologías posibles para el backend:
+
+Python con Flask o Django
+
+Node.js con Express
+
+Java con Spring Boot
+
+
+Comunicación entre Frontend y Backend
+
+El frontend se comunica con el backend mediante una API usando el protocolo HTTP.
+
+El proceso funciona así:
+
+El frontend envía una request (solicitud) HTTP a la API del backend.
+
+El backend recibe la solicitud, procesa la información y aplica la lógica del sistema.
+
+El backend devuelve una response (respuesta) al frontend, generalmente en formato JSON.
+
+El frontend interpreta la respuesta y actualiza la interfaz del usuario

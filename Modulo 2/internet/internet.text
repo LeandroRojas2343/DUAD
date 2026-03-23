@@ -1,0 +1,100 @@
+¿Qué ocurre cuando se escribe www.youtube.com
+ en el navegador?
+
+Cuando un usuario escribe www.youtube.com
+ en el navegador y presiona Enter, se inicia un proceso de comunicación entre el cliente (navegador) y los servidores de YouTube.
+Utilizando distintos protocolos y servicios de red para mostrar el contenido solicitado.
+
+
+DNS (Sistema de Nombres de Dominio)
+
+El DNS cumple la función de traductor entre nombres de dominio y direcciones IP.
+Proceso:
+
+El navegador consulta al DNS para saber qué dirección IP corresponde a www.youtube.com.
+
+El DNS responde con una dirección IP pública asociada a los servidores de YouTube.
+
+Gracias al DNS, el navegador sabe exactamente a qué servidor debe conectarse.
+
+
+Dirección IP
+
+La dirección IP es la identificación única del servidor en Internet.
+
+El navegador usa la IP obtenida por DNS.
+
+La solicitud sale desde la red local del usuario.
+
+El router convierte la IP privada del dispositivo en una IP pública mediante NAT.
+
+Se establece comunicación directa con el servidor de YouTube usando esa IP.
+
+
+Servidor
+
+El servidor de YouTube:
+
+Recibe la solicitud del navegador.
+
+Procesa la petición.
+
+Verifica permisos, ubicación y tipo de dispositivo.
+
+Envía la respuesta correspondiente.
+
+
+Protocolo HTTP / HTTPS
+
+Una vez localizada la IP del servidor, el navegador establece una conexión segura mediante HTTPS.
+
+HTTPS:
+
+Cifra la información enviada y recibida.
+
+Protege los datos del usuario.
+
+Evita que terceros intercepten la comunicación.
+
+El navegador envía una solicitud HTTP solicitando la página de YouTube.
+
+
+
+
+
+┌──────────────┐
+│   CLIENTE    │
+│ (Navegador)  │
+│  Usuario     │
+└──────┬───────┘
+       │
+       │ 1. Escribe: www.youtube.com
+       │
+       ▼
+┌──────────────┐
+│     DNS      │
+│ (Traductor)  │
+│ youtube.com  │
+│ → 142.250.x.x│
+└──────┬───────┘
+       │
+       │ 2. Devuelve la IP del servidor
+       │
+       ▼
+┌──────────────┐
+│   SERVIDOR   │
+│  YouTube     │
+│ (Google)     │
+└──────┬───────┘
+       │
+       │ 3. Respuesta HTTP/HTTPS
+       │    (HTML, CSS, JS, Video)
+       │
+       ▼
+┌──────────────┐
+│   CLIENTE    │
+│ Renderiza    │
+│ el contenido │
+│ y muestra    │
+│ el video     │
+└──────────────┘

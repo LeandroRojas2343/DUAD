@@ -1,0 +1,5 @@
+| id_usuario (PK) | nombre_completo | correo (único)                              | fecha_registro |
+| --------------- | --------------- | ------------------------------------------- | -------------- |
+| 1               | Ana Rodríguez   | [ana@gmail.com](mailto:ana@gmail.com)       | 2024-11-15     |
+| 2               | Juan Pérez      | [juan@hotmail.com](mailto:juan@hotmail.com) | 2024-12-01     |
+| 3               | María González  | [maria@yahoo.com](mailto:maria@yahoo.com)   | 2025-01-05     |

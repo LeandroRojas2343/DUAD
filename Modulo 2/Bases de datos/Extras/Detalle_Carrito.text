@@ -1,0 +1,5 @@
+| id_carrito (FK) | codigo_producto (FK) | cantidad |
+| --------------- | -------------------- | -------- |
+| CAR-001         | PRD-002              | 1        |
+| CAR-001         | PRD-005              | 2        |
+| CAR-002         | PRD-001              | 1        |

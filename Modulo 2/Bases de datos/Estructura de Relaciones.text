@@ -1,0 +1,15 @@
+Productos 
+    . Se relaciona con Detalle_Factura
+    . Se relaciona con Carrito_compras 
+
+Facturas 
+    . Se relaciona con Detalle_Factrua 
+    .Relacion de uno a muchos una factura muchos productos 
+
+Detalle_Factrua 
+. Tabla intermedia entre Facturas y Productos 
+. Permite registrar cantidad y monto por producto 
+
+
+Carrito_compras 
+    .Relacion muchos a muchos entre usuarios y productos usando email 
