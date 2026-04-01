@@ -27,7 +27,6 @@ CREATE TABLE ORDENES_1FN (
 
 -- ============================================
 -- 2FN: Eliminación de dependencias parciales
--- Separación en ORDENES, ITEMS y DETALLE_ORDEN
 -- ============================================
 
 CREATE TABLE ORDENES_2FN (
@@ -55,8 +54,7 @@ CREATE TABLE DETALLE_ORDEN_2FN (
 );
 
 -- ============================================
--- 3FN: Eliminación de dependencias 
--- Separación de CLIENTES y DIRECCIONES
+-- 3FN: Eliminación de dependencias transitivas
 -- ============================================
 
 CREATE TABLE CLIENTES_3FN (
@@ -102,7 +100,7 @@ CREATE TABLE DETALLE_ORDEN_3FN (
 -- =========================================================
 
 -- ============================================
--- 1FN: Datos atómicos, PK compuesta
+-- 1FN: Datos atómicos
 -- ============================================
 
 CREATE TABLE AUTOMOVILES_1FN (
@@ -120,15 +118,21 @@ CREATE TABLE AUTOMOVILES_1FN (
 );
 
 -- ============================================
--- 2FN: Eliminación de dependencias parciales
+-- 2FN: Cambio solicitado
 -- ============================================
 
 CREATE TABLE VEHICULOS_2FN (
   VIN VARCHAR(20) PRIMARY KEY,
-  Make VARCHAR(50),
-  Model VARCHAR(50),
+  ModelID INT,
   Year INT,
   Color VARCHAR(30)
+);
+
+-- NUEVA TABLA: MODELOS (reutiliza Make/Model)
+CREATE TABLE MODELOS_2FN (
+  ModelID INT PRIMARY KEY,
+  Make VARCHAR(50),
+  Model VARCHAR(50)
 );
 
 CREATE TABLE PROPIETARIOS_2FN (
@@ -145,25 +149,36 @@ CREATE TABLE VEHICULO_PROPIETARIO_2FN (
   FOREIGN KEY (OwnerID) REFERENCES PROPIETARIOS_2FN(OwnerID)
 );
 
+ALTER TABLE VEHICULOS_2FN
+ADD FOREIGN KEY (ModelID) REFERENCES MODELOS_2FN(ModelID);
+
 -- ============================================
 -- 3FN: Eliminación de dependencias transitivas
--- Separación de SEGUROS
 -- ============================================
 
-CREATE TABLE SEGUROS_3FN (
-  PolicyID INT PRIMARY KEY,
-  InsuranceCompany VARCHAR(100),
-  InsurancePolicy VARCHAR(50)
+-- NUEVA TABLA: COMPAÑIAS
+CREATE TABLE COMPANIAS_SEGURO_3FN (
+  CompanyID INT PRIMARY KEY,
+  CompanyName VARCHAR(100)
 );
 
+-- NUEVA TABLA: TIPOS DE SEGURO
+CREATE TABLE TIPOS_SEGURO_3FN (
+  PolicyTypeID INT PRIMARY KEY,
+  PolicyName VARCHAR(50),
+  CompanyID INT,
+  FOREIGN KEY (CompanyID) REFERENCES COMPANIAS_SEGURO_3FN(CompanyID)
+);
+
+-- TABLA RELACIONAL FINAL
 CREATE TABLE VEHICULO_PROPIETARIO_SEGURO_3FN (
   VIN VARCHAR(20),
   OwnerID INT,
-  PolicyID INT,
-  PRIMARY KEY (VIN, OwnerID),
+  PolicyTypeID INT,
+  PRIMARY KEY (VIN, OwnerID, PolicyTypeID),
   FOREIGN KEY (VIN) REFERENCES VEHICULOS_2FN(VIN),
   FOREIGN KEY (OwnerID) REFERENCES PROPIETARIOS_2FN(OwnerID),
-  FOREIGN KEY (PolicyID) REFERENCES SEGUROS_3FN(PolicyID)
+  FOREIGN KEY (PolicyTypeID) REFERENCES TIPOS_SEGURO_3FN(PolicyTypeID)
 );
 
 -- ============================================
