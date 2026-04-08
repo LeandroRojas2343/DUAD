@@ -1,5 +1,3 @@
-
-
 CREATE TABLE Authors (
     ID INT PRIMARY KEY,
     Name VARCHAR(100)
@@ -55,18 +53,18 @@ INSERT INTO Rents (ID, BookID, CustomerID, State) VALUES (4,3,1,'On time');
 INSERT INTO Rents (ID, BookID, CustomerID, State) VALUES (5,2,2,'Overdue');
 
 
-/*     */
-
-/* 1. Todos los libros y sus autores */
+/* 1. Todos los libros y sus autores (incluye libros sin autor) */
 SELECT Books.Name AS Book, Authors.Name AS Author
 FROM Books
-INNER JOIN Authors
+LEFT JOIN Authors
 ON Books.Author = Authors.ID;
+
 
 /* 2. Libros que no tienen autor */
 SELECT *
 FROM Books
 WHERE Author IS NULL;
+
 
 /* 3. Autores que no tienen libros */
 SELECT Authors.*
@@ -75,11 +73,13 @@ LEFT JOIN Books
 ON Authors.ID = Books.Author
 WHERE Books.ID IS NULL;
 
+
 /* 4. Libros que han sido rentados */
 SELECT DISTINCT Books.*
 FROM Books
 INNER JOIN Rents
 ON Books.ID = Rents.BookID;
+
 
 /* 5. Libros que nunca han sido rentados */
 SELECT Books.*
@@ -88,6 +88,7 @@ LEFT JOIN Rents
 ON Books.ID = Rents.BookID
 WHERE Rents.ID IS NULL;
 
+
 /* 6. Clientes que nunca han rentado */
 SELECT Customers.*
 FROM Customers
@@ -95,9 +96,10 @@ LEFT JOIN Rents
 ON Customers.ID = Rents.CustomerID
 WHERE Rents.ID IS NULL;
 
+
 /* 7. Libros rentados con estado 'Overdue' */
 SELECT DISTINCT Books.*
 FROM Books
 INNER JOIN Rents
 ON Books.ID = Rents.BookID
-WHERE Rents.State = 'Ove
+WHERE Rents.State = 'Overdue';
