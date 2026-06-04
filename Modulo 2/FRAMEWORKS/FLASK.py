@@ -4,229 +4,229 @@ import os
 
 app = Flask(__name__)
 
-DATA_FILE = "tareas.json"
-ESTADOS_VALIDOS = {"Por Hacer", "En Progreso", "Completada"}
+DATA_FILE = "tasks.json"
+VALID_STATUSES = {"To Do", "In Progress", "Completed"}
 
 
-# Lee el archivo JSON y devuelve la lista de tareas.
-# Si el archivo todavía no existe, retorna una lista vacía.
-def leer_tareas():
+# Reads the JSON file and returns the list of tasks.
+# If the file does not exist yet, returns an empty list.
+def read_tasks():
     if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-# Recibe la lista actualizada y la escribe en el archivo JSON.
-def guardar_tareas(tareas):
+# Receives the updated list and writes it to the JSON file.
+def save_tasks(tasks):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(tareas, f, ensure_ascii=False, indent=2)
+        json.dump(tasks, f, ensure_ascii=False, indent=2)
 
 
 # ──────────────────────────────────────────────
-# GET /tareas
-# Devuelve todas las tareas. Si se pasa ?estado=...,
-# filtra por ese valor antes de responder.
+# GET /tasks
+# Returns all tasks. If ?status=... is passed,
+# filters by that value before responding.
 # ──────────────────────────────────────────────
-@app.route("/tareas", methods=["GET"])
-def obtener_tareas():
-    tareas = leer_tareas()
-    estado = request.args.get("estado")
+@app.route("/tasks", methods=["GET"])
+def get_tasks():
+    tasks = read_tasks()
+    status = request.args.get("status")
 
-    if estado:
-        if estado not in ESTADOS_VALIDOS:
+    if status:
+        if status not in VALID_STATUSES:
             return jsonify({
-                "error": f"Estado inválido. Valores permitidos: {sorted(ESTADOS_VALIDOS)}"
+                "error": f"Invalid status. Allowed values: {sorted(VALID_STATUSES)}"
             }), 400
-        tareas = [t for t in tareas if t["estado"] == estado]
+        tasks = [t for t in tasks if t["status"] == status]
 
-    return jsonify(tareas), 200
-
-
-# ──────────────────────────────────────────────
-# GET /tareas/<id>
-# Busca una tarea por su id. Si no existe, responde 404.
-# ──────────────────────────────────────────────
-@app.route("/tareas/<int:tarea_id>", methods=["GET"])
-def obtener_tarea(tarea_id):
-    tareas = leer_tareas()
-    tarea = next((t for t in tareas if t["id"] == tarea_id), None)
-
-    if not tarea:
-        return jsonify({"error": f"Tarea con id {tarea_id} no encontrada"}), 404
-
-    return jsonify(tarea), 200
+    return jsonify(tasks), 200
 
 
 # ──────────────────────────────────────────────
-# POST /tareas
-# Valida todos los campos del body, incluyendo que 'id'
-# sea un entero. Si ya existe una tarea con ese id, responde 409.
+# GET /tasks/<id>
+# Looks up a task by its id. If not found, responds 404.
 # ──────────────────────────────────────────────
-@app.route("/tareas", methods=["POST"])
-def crear_tarea():
-    datos = request.get_json()
+@app.route("/tasks/<int:task_id>", methods=["GET"])
+def get_task(task_id):
+    tasks = read_tasks()
+    task = next((t for t in tasks if t["id"] == task_id), None)
 
-    if not datos:
-        return jsonify({"error": "El cuerpo de la petición debe ser JSON"}), 400
+    if not task:
+        return jsonify({"error": f"Task with id {task_id} not found"}), 404
 
-    # Se acumulan todos los errores antes de responder
-    errores = []
+    return jsonify(task), 200
 
-    id_valor = datos.get("id")
-    if id_valor is None:
-        errores.append("El campo 'id' es requerido")
-    elif not isinstance(id_valor, int):
-        errores.append("El campo 'id' debe ser un entero")
 
-    if not datos.get("titulo", "").strip():
-        errores.append("El campo 'titulo' es requerido y no puede estar vacío")
-    if not datos.get("descripcion", "").strip():
-        errores.append("El campo 'descripcion' es requerido y no puede estar vacío")
-    if not datos.get("estado", "").strip():
-        errores.append("El campo 'estado' es requerido")
-    elif datos["estado"] not in ESTADOS_VALIDOS:
-        errores.append(f"Estado inválido. Valores permitidos: {sorted(ESTADOS_VALIDOS)}")
+# ──────────────────────────────────────────────
+# POST /tasks
+# Validates all body fields, including that 'id'
+# is an integer. If a task with that id already exists, responds 409.
+# ──────────────────────────────────────────────
+@app.route("/tasks", methods=["POST"])
+def create_task():
+    data = request.get_json()
 
-    if errores:
-        return jsonify({"errores": errores}), 400
+    if not data:
+        return jsonify({"error": "Request body must be JSON"}), 400
 
-    tareas = leer_tareas()
+    # All errors are accumulated before responding
+    errors = []
 
-    if any(t["id"] == id_valor for t in tareas):
-        return jsonify({"error": f"Ya existe una tarea con id {id_valor}"}), 409
+    id_value = data.get("id")
+    if id_value is None:
+        errors.append("The 'id' field is required")
+    elif not isinstance(id_value, int):
+        errors.append("The 'id' field must be an integer")
 
-    nueva_tarea = {
-        "id":          id_valor,
-        "titulo":      datos["titulo"].strip(),
-        "descripcion": datos["descripcion"].strip(),
-        "estado":      datos["estado"],
+    if not data.get("title", "").strip():
+        errors.append("The 'title' field is required and cannot be empty")
+    if not data.get("description", "").strip():
+        errors.append("The 'description' field is required and cannot be empty")
+    if not data.get("status", "").strip():
+        errors.append("The 'status' field is required")
+    elif data["status"] not in VALID_STATUSES:
+        errors.append(f"Invalid status. Allowed values: {sorted(VALID_STATUSES)}")
+
+    if errors:
+        return jsonify({"errors": errors}), 400
+
+    tasks = read_tasks()
+
+    if any(t["id"] == id_value for t in tasks):
+        return jsonify({"error": f"A task with id {id_value} already exists"}), 409
+
+    new_task = {
+        "id":          id_value,
+        "title":       data["title"].strip(),
+        "description": data["description"].strip(),
+        "status":      data["status"],
     }
 
-    tareas.append(nueva_tarea)
-    guardar_tareas(tareas)
+    tasks.append(new_task)
+    save_tasks(tasks)
 
-    return jsonify(nueva_tarea), 201
+    return jsonify(new_task), 201
 
 
 # ──────────────────────────────────────────────
-# PUT /tareas/<id>
-# Reemplaza la tarea completa. Los tres campos son obligatorios:
-# si falta alguno, se rechaza la petición con 400.
+# PUT /tasks/<id>
+# Replaces the entire task. All three fields are required:
+# if any is missing, the request is rejected with 400.
 # ──────────────────────────────────────────────
-@app.route("/tareas/<int:tarea_id>", methods=["PUT"])
-def editar_tarea(tarea_id):
-    tareas = leer_tareas()
-    indice = next((i for i, t in enumerate(tareas) if t["id"] == tarea_id), None)
+@app.route("/tasks/<int:task_id>", methods=["PUT"])
+def edit_task(task_id):
+    tasks = read_tasks()
+    index = next((i for i, t in enumerate(tasks) if t["id"] == task_id), None)
 
-    if indice is None:
-        return jsonify({"error": f"Tarea con id {tarea_id} no encontrada"}), 404
+    if index is None:
+        return jsonify({"error": f"Task with id {task_id} not found"}), 404
 
-    datos = request.get_json()
-    if not datos:
-        return jsonify({"error": "El cuerpo de la petición debe ser JSON"}), 400
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body must be JSON"}), 400
 
-    errores = []
+    errors = []
 
-    if not datos.get("titulo", "").strip():
-        errores.append("El campo 'titulo' es obligatorio y no puede estar vacío")
-    if not datos.get("descripcion", "").strip():
-        errores.append("El campo 'descripcion' es obligatorio y no puede estar vacío")
-    if not datos.get("estado", "").strip():
-        errores.append("El campo 'estado' es obligatorio")
-    elif datos["estado"] not in ESTADOS_VALIDOS:
-        errores.append(f"Estado inválido. Valores permitidos: {sorted(ESTADOS_VALIDOS)}")
+    if not data.get("title", "").strip():
+        errors.append("The 'title' field is required and cannot be empty")
+    if not data.get("description", "").strip():
+        errors.append("The 'description' field is required and cannot be empty")
+    if not data.get("status", "").strip():
+        errors.append("The 'status' field is required")
+    elif data["status"] not in VALID_STATUSES:
+        errors.append(f"Invalid status. Allowed values: {sorted(VALID_STATUSES)}")
 
-    if errores:
-        return jsonify({"errores": errores}), 400
+    if errors:
+        return jsonify({"errors": errors}), 400
 
-    # Se construye el recurso desde cero con los datos recibidos
-    tarea_actualizada = {
-        "id":          tarea_id,
-        "titulo":      datos["titulo"].strip(),
-        "descripcion": datos["descripcion"].strip(),
-        "estado":      datos["estado"],
+    # The resource is rebuilt from scratch with the received data
+    updated_task = {
+        "id":          task_id,
+        "title":       data["title"].strip(),
+        "description": data["description"].strip(),
+        "status":      data["status"],
     }
 
-    tareas[indice] = tarea_actualizada
-    guardar_tareas(tareas)
+    tasks[index] = updated_task
+    save_tasks(tasks)
 
-    return jsonify(tarea_actualizada), 200
+    return jsonify(updated_task), 200
 
-
-# ──────────────────────────────────────────────
-# PATCH /tareas/<id>
 
 # ──────────────────────────────────────────────
-@app.route("/tareas/<int:tarea_id>", methods=["PATCH"])
-def actualizar_tarea(tarea_id):
-    tareas = leer_tareas()
-    indice = next((i for i, t in enumerate(tareas) if t["id"] == tarea_id), None)
+# PATCH /tasks/<id>
+# Updates only the fields that are sent in the body.
+# ──────────────────────────────────────────────
+@app.route("/tasks/<int:task_id>", methods=["PATCH"])
+def update_task(task_id):
+    tasks = read_tasks()
+    index = next((i for i, t in enumerate(tasks) if t["id"] == task_id), None)
 
-    if indice is None:
-        return jsonify({"error": f"Tarea con id {tarea_id} no encontrada"}), 404
+    if index is None:
+        return jsonify({"error": f"Task with id {task_id} not found"}), 404
 
-    datos = request.get_json()
-    if not datos:
-        return jsonify({"error": "El cuerpo de la petición debe ser JSON"}), 400
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Request body must be JSON"}), 400
 
-    tarea = tareas[indice]
-    errores = []
+    task = tasks[index]
+    errors = []
 
-    if "titulo" in datos:
-        if not datos["titulo"].strip():
-            errores.append("El campo 'titulo' no puede estar vacío")
+    if "title" in data:
+        if not data["title"].strip():
+            errors.append("The 'title' field cannot be empty")
         else:
-            tarea["titulo"] = datos["titulo"].strip()
+            task["title"] = data["title"].strip()
 
-    if "descripcion" in datos:
-        if not datos["descripcion"].strip():
-            errores.append("El campo 'descripcion' no puede estar vacío")
+    if "description" in data:
+        if not data["description"].strip():
+            errors.append("The 'description' field cannot be empty")
         else:
-            tarea["descripcion"] = datos["descripcion"].strip()
+            task["description"] = data["description"].strip()
 
-    if "estado" in datos:
-        if datos["estado"] not in ESTADOS_VALIDOS:
-            errores.append(f"Estado inválido. Valores permitidos: {sorted(ESTADOS_VALIDOS)}")
+    if "status" in data:
+        if data["status"] not in VALID_STATUSES:
+            errors.append(f"Invalid status. Allowed values: {sorted(VALID_STATUSES)}")
         else:
-            tarea["estado"] = datos["estado"]
+            task["status"] = data["status"]
 
-    if errores:
-        return jsonify({"errores": errores}), 400
+    if errors:
+        return jsonify({"errors": errors}), 400
 
-    tareas[indice] = tarea
-    guardar_tareas(tareas)
+    tasks[index] = task
+    save_tasks(tasks)
 
-    return jsonify(tarea), 200
-
-
-# ──────────────────────────────────────────────
-# DELETE /tareas/<id>
-# Elimina la tarea si existe. Responde 204 porque
-# la operación fue exitosa pero no hay nada que devolver.
-# ──────────────────────────────────────────────
-@app.route("/tareas/<int:tarea_id>", methods=["DELETE"])
-def eliminar_tarea(tarea_id):
-    tareas = leer_tareas()
-    nueva_lista = [t for t in tareas if t["id"] != tarea_id]
-
-    if len(nueva_lista) == len(tareas):
-        return jsonify({"error": f"Tarea con id {tarea_id} no encontrada"}), 404
-
-    guardar_tareas(nueva_lista)
-    return "", 204
+    return jsonify(task), 200
 
 
 # ──────────────────────────────────────────────
-# Manejadores de errores globales
+# DELETE /tasks/<id>
+# Deletes the task if it exists. Responds 204 because
+# the operation was successful but there is nothing to return.
+# ──────────────────────────────────────────────
+@app.route("/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    tasks = read_tasks()
+    new_list = [t for t in tasks if t["id"] != task_id]
+
+    if len(new_list) == len(tasks):
+        return jsonify({"error": f"Task with id {task_id} not found"}), 404
+
+    save_tasks(new_list)
+    return jsonify({"message": f"Task with id {task_id} deleted successfully"}), 200
+
+
+# ──────────────────────────────────────────────
+# Global error handlers
 # ──────────────────────────────────────────────
 @app.errorhandler(404)
-def no_encontrado(e):
-    return jsonify({"error": "Endpoint no encontrado"}), 404
+def not_found(e):
+    return jsonify({"error": "Endpoint not found"}), 404
 
 @app.errorhandler(405)
-def metodo_no_permitido(e):
-    return jsonify({"error": "Método HTTP no permitido en este endpoint"}), 405
+def method_not_allowed(e):
+    return jsonify({"error": "HTTP method not allowed on this endpoint"}), 405
 
 
 if __name__ == "__main__":
