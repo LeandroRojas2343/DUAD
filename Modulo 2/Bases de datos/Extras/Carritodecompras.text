@@ -1,0 +1,5 @@
+| id_carrito (PK) | correo_usuario                              |
+| --------------- | ------------------------------------------- |
+| CAR-001         | [ana@gmail.com](mailto:ana@gmail.com)       |
+| CAR-002         | [ana@gmail.com](mailto:ana@gmail.com)       |
+| CAR-003         | [juan@hotmail.com](mailto:juan@hotmail.com) |

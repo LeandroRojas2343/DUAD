@@ -1,0 +1,87 @@
+SELECT
+
+La instrucción principal para consultar datos de una o varias tablas.
+
+
+ORDER BY
+SELECT nombre, edad
+FROM estudiantes
+ORDER BY edad DESC;
+
+Ordena los resultados según una o varias columnas.
+
+ASC = orden ascendente (valor por defecto)
+
+DESC = orden descendente
+____________________________________________
+
+LIMIT
+SELECT *
+FROM productos
+ORDER BY precio DESC
+LIMIT 5;
+
+Muestra solo una cantidad específica de filas.
+
+_________________________________________________
+
+GROUP BY
+
+SELECT ciudad, COUNT(*) AS total_clientes
+FROM clientes
+GROUP BY ciudad;
+
+Agrupa filas que comparten un valor común. 
+Muy útil con funciones de agregación (como COUNT, SUM, AVG).
+
+____________________________________________
+
+ TiPOS DE JOIN 
+A = Trabajadores 
+B = departamentos 
+
+INNER JOIN
+
+Devuelve solo filas que tienen coincidencia en ambas tablas.
+SELECT A.nombre, B.departamento
+FROM trabajadores A
+INNER JOIN departamentos B
+ON A.dept_id = B.id;
+
+____________________________________________
+
+LEFT JOIN
+
+Devuelve todas las filas de la tabla de la izquierda. 
+aunque no tengan coincidencia en la derecha.
+SELECT A.nombre, B.departamento
+FROM trabajadores A
+LEFT JOIN departamentos B
+ON A.dept_id = B.id;
+
+    "Si un trabajador no tiene departamento asignado.
+    igual aparecerá con NULL en la columna de departamento."
+
+_________________________________________________
+
+RIGHT JOIN
+
+Devuelve todas las filas de la tabla de la derecha, 
+aunque no tengan coincidencia en la izquierda.
+
+SELECT A.nombre, B.departamento
+FROM trabajadores A
+RIGHT JOIN departamentos B
+ON A.dept_id = B.id;
+    "Útil si quieres ver todos los departamentos aunque no haya trabajadores asignados."
+
+    | **Cláusula** | **Se usa con**        | **Resultado principal**   |
+| ------------ | --------------------- | ------------------------- |
+| `ORDER BY`   | SELECT                | Ordena resultados         |
+| `LIMIT`      | SELECT                | Restringe número de filas |
+| `GROUP BY`   | SELECT con agregación | Agrupa filas              |
+| `INNER JOIN` | SELECT entre tablas   | Filas coincidentes        |
+| `LEFT JOIN`  | SELECT entre tablas   | Todas de la izquierda     |
+| `RIGHT JOIN` | SELECT entre tablas   | Todas de la derecha       |
+
+

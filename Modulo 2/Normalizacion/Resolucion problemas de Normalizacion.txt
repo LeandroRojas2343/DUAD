@@ -1,0 +1,81 @@
+EJERCICIO DE NORMALIZACIÓN
+PROBLEMA 1: ORDENES
+Tabla Original
+ORDENES(OrderID, CustomerName, CustomerPhone, Address, ItemID, ItemName, Price, Quantity, SpecialRequest, DeliveryTime)
+Clave candidata inicial: (OrderID, ItemID)
+Primera Forma Normal (1FN)
+La tabla cumple 1FN porque:
+- No existen atributos multivaluados
+- Cada campo contiene valores atómicos
+- No existen grupos repetitivos en una misma fila
+Se mantiene la misma estructura con PK: (OrderID, ItemID)
+
+
+
+Segunda Forma Normal (2FN)
+Existen dependencias parciales:
+Dependen solo de OrderID: CustomerName, CustomerPhone, Address, DeliveryTime
+Dependen solo de ItemID: ItemName, Price
+Descomposición:
+    ORDEN(OrderID PK, CustomerName, CustomerPhone, Address, DeliveryTime)
+    PRODUCTO(ItemID PK, ItemName, Price)
+    DETALLE_ORDEN(OrderID FK, ItemID FK, Quantity, SpecialRequest)
+PK: (OrderID, ItemID)
+
+
+Tercera Forma Normal (3FN)
+Existen dependencias transitivas:
+CustomerPhone depende de CustomerName
+Address depende del cliente
+Descomposición final:
+CLIENTE(CustomerID PK, CustomerName, CustomerPhone)
+DIRECCION(AddressID PK, CustomerID FK, Address)
+ORDEN(OrderID PK, CustomerID FK, AddressID FK, DeliveryTime)
+PRODUCTO(ItemID PK, ItemName, Price)
+DETALLE_ORDEN(OrderID FK, ItemID FK, Quantity, SpecialRequest)
+Resultado Final (3FN)
+- CLIENTE
+- DIRECCION
+- ORDEN
+- PRODUCTO
+- DETALLE_ORDEN
+
+
+PROBLEMA 2: AUTOMOVILES
+Tabla Original
+
+AUTOMOVILES(VIN, Make, Model, Year, Color, OwnerID, OwnerName, OwnerPhone, InsuranceCompany, InsurancePolicy)
+Clave candidata inicial: (VIN, OwnerID)
+Primera Forma Normal (1FN)
+La tabla cumple 1FN porque no existen valores multivaluados ni grupos repetitivos.
+
+Segunda Forma Normal (2FN)
+Existen dependencias parciales:
+Dependen solo de VIN: Make, Model, Year, Color
+Dependen solo de OwnerID: OwnerName, OwnerPhone
+Descomposición:
+    AUTOMOVIL(VIN PK, Make, Model, Year, Color)
+    PROPIETARIO(OwnerID PK, OwnerName, OwnerPhone)
+    PROPIEDAD(VIN FK, OwnerID FK)
+PK: (VIN, OwnerID)
+
+
+Tercera Forma Normal (3FN)
+Existe dependencia transitiva:
+InsurancePolicy depende de InsuranceCompany
+Descomposición final:
+ASEGURADORA(InsuranceCompanyID PK, InsuranceCompany)
+POLIZA(PolicyID PK, InsuranceCompanyID FK, PolicyNumber, VIN FK, OwnerID FK)
+Resultado Final (3FN)
+- AUTOMOVIL
+- PROPIETARIO
+- PROPIEDAD
+- ASEGURADORA
+- POLIZA
+Conclusión
+Se eliminaron dependencias parciales y transitivas, redundancias y se mejoró la integridad de los datos.
+Ambos modelos se encuentran en Tercera Forma Normal (3FN).
+
+
+
+

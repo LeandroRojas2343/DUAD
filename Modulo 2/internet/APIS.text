@@ -1,0 +1,70 @@
+Nombre de la API: JSONPlaceholder
+
+Descripción:
+JSONPlaceholder es una API pública gratuita diseñada para pruebas y aprendizaje. 
+Proporciona datos de ejemplo como usuarios, publicaciones y comentarios, permitiendo realizar solicitudes GET, POST, PUT y DELETE sin autenticación.
+
+
+Solicitud GET
+
+Método: GET 200 ok
+Output obtenido: [
+    {
+        "userId": 1,
+        "id": 1,
+        "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+        "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    },
+  
+
+
+Endpoint: /posts
+
+Descripción: Obtengo una lista de publicaciones.
+
+
+Solicitud POST
+
+Método: POST 201 Created
+input: {
+    "title": "Mi primer post",
+    "body": "Probando Postman",
+    "userId": 1,
+    "id": 101
+}
+
+Endpoint: /posts
+
+Body: Datos del post en formato JSON
+
+Descripción: Simula la creación de una publicación.
+
+
+
+Solicitud PUT 200 ok
+input: {
+  "id": 1,
+  "title": "Post actualizado",
+  "body": "Contenido actualizado",
+  "userId": 1
+}
+
+
+Método: PUT 
+Endpoint: /posts/1
+
+Body: Datos actualizados
+
+Descripción: Simula la actualización de una publicación existente
+
+
+Aprendizaje:
+Aprendí cómo estructurar solicitudes HTTP.
+Usar diferentes métodos y analizar respuestas desde una API.
+
+
+Conclusion
+Durante esta práctica aprendí que las APIs permiten la comunicación entre un cliente y un servidor mediante solicitudes HTTP. 
+Cada método cumple una función específica como obtener, crear o modificar información.
+
+Postman me ayudó a entender mejor cómo se envían las solicitudes, cómo se reciben las respuestas y cómo analizar los códigos de estado, lo cual es clave para el desarrollo y prueba de aplicaciones.

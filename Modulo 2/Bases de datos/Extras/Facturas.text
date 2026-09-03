@@ -1,0 +1,5 @@
+| numero_factura (PK) | fecha_compra | correo_comprador                            | monto_total |
+| ------------------- | ------------ | ------------------------------------------- | ----------- |
+| FAC-1001            | 2025-02-01   | [ana@gmail.com](mailto:ana@gmail.com)       | 83000       |
+| FAC-1002            | 2025-02-02   | [juan@hotmail.com](mailto:juan@hotmail.com) | 210000      |
+| FAC-1003            | 2025-02-03   | [maria@yahoo.com](mailto:maria@yahoo.com)   | 162000      |
