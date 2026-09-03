@@ -1,0 +1,142 @@
+{
+  "info": {
+    "name": "Lyfter Car Rental API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" }
+  ],
+  "item": [
+    {
+      "name": "Creacion",
+      "item": [
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Juan Perez\",\n  \"email\": \"juan.perez@example.com\",\n  \"username\": \"juanperez\",\n  \"password\": \"secret123\",\n  \"birth_date\": \"1998-04-12\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear auto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/cars",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"manufacture_year\": 2023\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear alquiler",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/rentals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"car_id\": 1\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modificacion",
+      "item": [
+        {
+          "name": "Cambiar estado de auto",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/cars/1/status",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"maintenance\"\n}" }
+          }
+        },
+        {
+          "name": "Cambiar estado de usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/users/1/status",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"inactive\"\n}" }
+          }
+        },
+        {
+          "name": "Completar alquiler",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/rentals/1/complete"
+          }
+        },
+        {
+          "name": "Cambiar estado de alquiler",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/rentals/1/status",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"cancelled\"\n}" }
+          }
+        },
+        {
+          "name": "Flagear usuario como moroso",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/users/1/flag-delinquent"
+          }
+        },
+        {
+          "name": "Deshabilitar auto",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/cars/1/disable"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listado",
+      "item": [
+        {
+          "name": "Listar usuarios (sin filtro)",
+          "request": { "method": "GET", "url": "{{base_url}}/users" }
+        },
+        {
+          "name": "Listar usuarios por username",
+          "request": { "method": "GET", "url": "{{base_url}}/users?username=juanperez" }
+        },
+        {
+          "name": "Listar autos (sin filtro)",
+          "request": { "method": "GET", "url": "{{base_url}}/cars" }
+        },
+        {
+          "name": "Listar autos por modelo",
+          "request": { "method": "GET", "url": "{{base_url}}/cars?model=Corolla" }
+        },
+        {
+          "name": "Listar alquileres (sin filtro)",
+          "request": { "method": "GET", "url": "{{base_url}}/rentals" }
+        },
+        {
+          "name": "Listar alquileres por estado",
+          "request": { "method": "GET", "url": "{{base_url}}/rentals?status=active" }
+        },
+        {
+          "name": "Autos alquilados",
+          "request": { "method": "GET", "url": "{{base_url}}/cars/rented" }
+        },
+        {
+          "name": "Autos disponibles",
+          "request": { "method": "GET", "url": "{{base_url}}/cars/available" }
+        }
+      ]
+    }
+  ]
+}

@@ -207,7 +207,7 @@ def update_task(task_id):
 # ──────────────────────────────────────────────
 @app.route("/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
-    tasks = read_tasks()
+    tasks = read_tasks()       
     new_list = [t for t in tasks if t["id"] != task_id]
 
     if len(new_list) == len(tasks):
