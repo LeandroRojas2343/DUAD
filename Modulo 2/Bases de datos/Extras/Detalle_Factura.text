@@ -1,0 +1,5 @@
+| numero_factura (FK) | codigo_producto (FK) | cantidad | precio_unitario |
+| ------------------- | -------------------- | -------- | --------------- |
+| FAC-1001            | PRD-003              | 1        | 80000           |
+| FAC-1001            | PRD-005              | 1        | 3000            |
+| FAC-1002            | PRD-001              | 2        | 105000          |

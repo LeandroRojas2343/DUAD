@@ -1,0 +1,33 @@
+| Tipo de API | Formato de datos usado | Nivel de flexibilidad                                                | Dificultad de implementación | Uso actual |
+| ----------- | ---------------------- | -------------------------------------------------------------------- | ---------------------------- | ---------- |
+| **REST**    | JSON (principal), XML  | Media–Alta (el servidor define endpoints, el cliente elige qué usar) | Baja–Media                   | **Alta**   |
+| **SOAP**    | XML                    | Baja (estructura rígida definida por el servidor)                    | Alta                         | **Baja**   |
+| **GraphQL** | JSON                   | Muy Alta (el cliente controla exactamente qué datos recibe)          | Media–Alta                   | Media–Alta |
+
+
+Rest es la opcicion mas viable 
+¿Por qué?
+
+Menor complejidad inicial
+
+Menos curva de aprendizaje
+
+Excelente compatibilidad
+
+Funciona perfecto con web, móvil, apps híbridas
+
+Compatible con casi todos los frameworks (Flask, Django, Node, Spring)
+
+Escalable
+
+Puedes empezar simple y crecer
+
+Se puede cachear fácilmente
+
+Estándar en la industria
+
+Más desarrolladores lo conocen
+
+Más documentación, ejemplos y soporte
+
+GraphQL puede añadirse después, cuando el sistema crezca y necesites optimizar consultas.    

@@ -1,0 +1,7 @@
+| codigo_producto (PK) | nombre_completo                    | precio | fecha_ingreso | marca    |
+| -------------------- | -------------------------- | ------ | ------------- | -------- |
+| PRD-001              | Mouse inalámbrico Logitech | 18000  | 2025-01-10    | Logitech |
+| PRD-002              | Teclado mecánico RGB       | 65000  | 2025-01-12    | Redragon |
+| PRD-003              | Monitor 24 pulgadas        | 210000 | 2025-01-15    | Samsung  |
+| PRD-004              | Auriculares Bluetooth      | 42000  | 2025-01-18    | Sony     |
+| PRD-005              | Disco SSD 1TB              | 120000 | 2025-01-20    | Kingston |
